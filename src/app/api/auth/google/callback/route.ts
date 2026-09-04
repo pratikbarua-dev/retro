@@ -48,6 +48,15 @@ export async function GET(req: NextRequest) {
       return NextResponse.redirect(`${baseUrl}/login?error=no_user_email`);
     }
 
+    const adminEmails = (process.env.ADMIN_EMAILS || '')
+      .split(',')
+      .map((e) => e.trim().toLowerCase())
+      .filter(Boolean);
+
+    const isAdmin =
+      adminEmails.includes(googleUser.email.toLowerCase()) ||
+      googleUser.email.toLowerCase().includes('admin');
+
     let user = db.getUserByEmail(googleUser.email);
 
     if (!user) {
@@ -55,11 +64,13 @@ export async function GET(req: NextRequest) {
         email: googleUser.email,
         name: googleUser.name || googleUser.email.split('@')[0],
         avatar: googleUser.picture || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=200',
-        role: googleUser.email.includes('admin') ? 'ADMIN' : 'USER',
+        role: isAdmin ? 'ADMIN' : 'USER',
         institution: 'Daffodil International University',
         department: 'Robotics & Automation',
         batch: '2025',
       });
+    } else if (isAdmin && user.role !== 'ADMIN') {
+      user = db.updateUser(user.id, { role: 'ADMIN' }) || user;
     }
 
     const token = signToken(user);

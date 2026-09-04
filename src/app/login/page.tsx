@@ -189,7 +189,7 @@ function LoginContent() {
 
           {/* BOTTOM FOOTER */}
           <div className="pt-4 border-t border-slate-100 text-center text-xs font-mono text-slate-500">
-            <span className="text-[10px] text-slate-400">RETRO LAB v2.5 :: DIU</span>
+            {/* Clean empty footer border */}
           </div>
         </div>
       </div>
