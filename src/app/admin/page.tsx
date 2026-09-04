@@ -22,6 +22,7 @@ import { Booking, AnalyticsSummary } from '@/types';
 export default function AdminDashboardPage() {
   const [summary, setSummary] = useState<AnalyticsSummary | null>(null);
   const [todayBookings, setTodayBookings] = useState<Booking[]>([]);
+  const [timeSlots, setTimeSlots] = useState<any[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
 
   const loadData = () => {
@@ -37,6 +38,12 @@ export default function AdminDashboardPage() {
         if (data.bookings) {
           setTodayBookings(data.bookings.slice(0, 6));
         }
+      });
+
+    fetch('/api/admin/time-slots')
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.slots) setTimeSlots(data.slots);
       })
       .finally(() => setLoading(false));
   };
@@ -93,11 +100,11 @@ export default function AdminDashboardPage() {
             <CalendarCheck className="w-4 h-4 text-[#0066FF]" />
           </div>
           <div className="text-3xl font-extrabold font-mono text-white">
-            {summary?.totalBookings || 24}
+            {summary?.totalBookings ?? 0}
           </div>
-          <div className="text-[11px] font-mono text-emerald-400 flex items-center gap-1">
-            <TrendingUp className="w-3.5 h-3.5" />
-            +12% from last week
+          <div className="text-[11px] font-mono text-slate-400 flex items-center gap-1">
+            <TrendingUp className="w-3.5 h-3.5 text-emerald-400" />
+            Live Database Sync
           </div>
         </div>
 
@@ -107,11 +114,11 @@ export default function AdminDashboardPage() {
             <Users className="w-4 h-4 text-[#0066FF]" />
           </div>
           <div className="text-3xl font-extrabold font-mono text-white">
-            {summary?.totalUsers || 18}
+            {summary?.totalUsers ?? 0}
           </div>
-          <div className="text-[11px] font-mono text-emerald-400 flex items-center gap-1">
-            <TrendingUp className="w-3.5 h-3.5" />
-            +6% from last week
+          <div className="text-[11px] font-mono text-slate-400 flex items-center gap-1">
+            <TrendingUp className="w-3.5 h-3.5 text-emerald-400" />
+            Verified Members
           </div>
         </div>
 
@@ -121,11 +128,11 @@ export default function AdminDashboardPage() {
             <DollarSign className="w-4 h-4 text-emerald-400" />
           </div>
           <div className="text-3xl font-extrabold font-mono text-emerald-400">
-            ৳{summary?.totalRevenue || 8350}
+            ৳{summary?.totalRevenue ?? 0}
           </div>
-          <div className="text-[11px] font-mono text-emerald-400 flex items-center gap-1">
-            <TrendingUp className="w-3.5 h-3.5" />
-            +18% from yesterday
+          <div className="text-[11px] font-mono text-slate-400 flex items-center gap-1">
+            <TrendingUp className="w-3.5 h-3.5 text-emerald-400" />
+            Gross Earnings
           </div>
         </div>
 
@@ -135,10 +142,10 @@ export default function AdminDashboardPage() {
             <Activity className="w-4 h-4 text-[#0066FF]" />
           </div>
           <div className="text-3xl font-extrabold font-mono text-white">
-            {summary?.occupancyRate || 60}%
+            {summary?.occupancyRate ?? 0}%
           </div>
           <div className="text-[11px] font-mono text-slate-400">
-            {summary?.seatsBookedToday || 24} / {summary?.totalSeatsToday || 40} seats filled today
+            {summary?.seatsBookedToday ?? 0} / {summary?.totalSeatsToday ?? 40} seats filled today
           </div>
         </div>
       </div>
@@ -156,39 +163,30 @@ export default function AdminDashboardPage() {
             </Link>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 font-mono text-xs">
-            <div className="p-3 bg-slate-900/60 rounded-xl border border-slate-800 flex items-center justify-between">
-              <div>
-                <div className="font-bold text-white">10:00 AM – 12:00 PM</div>
-                <div className="text-[10px] text-slate-400">Morning Prototyping</div>
-              </div>
-              <Badge variant="green">90% Full</Badge>
+          {timeSlots.length === 0 ? (
+            <div className="py-8 text-center text-xs font-mono text-slate-500 bg-slate-900/30 rounded-xl border border-slate-800/80">
+              No active time slots configured yet. Create slots in Time Slots management.
             </div>
-
-            <div className="p-3 bg-slate-900/60 rounded-xl border border-slate-800 flex items-center justify-between">
-              <div>
-                <div className="font-bold text-white">02:00 PM – 04:00 PM</div>
-                <div className="text-[10px] text-slate-400">Afternoon Peak</div>
-              </div>
-              <Badge variant="amber">75% Full</Badge>
+          ) : (
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 font-mono text-xs">
+              {timeSlots.slice(0, 4).map((slot) => {
+                const booked = slot.bookedSeats || 0;
+                const cap = slot.capacity || 10;
+                const percent = Math.round((booked / cap) * 100);
+                return (
+                  <div key={slot.id || slot.startTime} className="p-3 bg-slate-900/60 rounded-xl border border-slate-800 flex items-center justify-between">
+                    <div>
+                      <div className="font-bold text-white">{slot.startTime} – {slot.endTime}</div>
+                      <div className="text-[10px] text-slate-400">{slot.label || `${booked}/${cap} Seats`}</div>
+                    </div>
+                    <Badge variant={percent > 80 ? 'red' : percent > 50 ? 'amber' : 'green'}>
+                      {percent}% Full
+                    </Badge>
+                  </div>
+                );
+              })}
             </div>
-
-            <div className="p-3 bg-slate-900/60 rounded-xl border border-slate-800 flex items-center justify-between">
-              <div>
-                <div className="font-bold text-white">04:00 PM – 06:00 PM</div>
-                <div className="text-[10px] text-slate-400">Evening Lab</div>
-              </div>
-              <Badge variant="amber">60% Full</Badge>
-            </div>
-
-            <div className="p-3 bg-slate-900/60 rounded-xl border border-slate-800 flex items-center justify-between">
-              <div>
-                <div className="font-bold text-white">12:00 PM – 02:00 PM</div>
-                <div className="text-[10px] text-slate-400">Midday Session</div>
-              </div>
-              <Badge variant="green">50% Full</Badge>
-            </div>
-          </div>
+          )}
         </div>
 
         {/* QUICK NAVIGATION PANEL */}

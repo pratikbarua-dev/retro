@@ -2,8 +2,6 @@ import { NextRequest, NextResponse } from 'next/server';
 import { verifyToken } from '@/lib/auth/jwt';
 
 export default function proxy(req: NextRequest) {
-
-
   const { pathname } = req.nextUrl;
   const token = req.cookies.get('retrolab_session')?.value;
 
@@ -52,7 +50,10 @@ export default function proxy(req: NextRequest) {
   return NextResponse.next();
 }
 
-export const config = {
-  matcher: ['/admin/:path*', '/dashboard/:path*'],
-};
+export function middleware(req: NextRequest) {
+  return proxy(req);
+}
 
+export const config = {
+  matcher: ['/admin', '/admin/:path*', '/dashboard', '/dashboard/:path*'],
+};
