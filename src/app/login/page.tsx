@@ -4,15 +4,10 @@ import React, { useState, useEffect, Suspense } from 'react';
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
 import {
-  Lock,
-  Sparkles,
   CheckCircle2,
   ShieldAlert,
   ArrowLeft,
-  Shield,
-  Zap,
 } from 'lucide-react';
-import { Badge } from '@/components/ui/Badge';
 import {
   SchematicMarginDecorations,
   FullPageSchematicOverlay,
@@ -83,21 +78,8 @@ function LoginContent() {
             <ChipQFP className="w-48 h-48 text-[#0066FF]" />
           </div>
 
-          {/* GATEWAY STATUS BAR */}
-          <div className="flex items-center justify-between border-b border-slate-100 pb-4">
-            <div className="flex items-center gap-2">
-              <div className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-signal-blink shadow-[0_0_8px_#10B981]" />
-              <span className="text-[11px] font-mono font-bold text-slate-600 tracking-wider">
-                AUTH GATEWAY :: ONLINE
-              </span>
-            </div>
-            <div className="flex items-center gap-1.5 px-2.5 py-1 bg-blue-50 border border-blue-200 rounded-lg text-[10px] font-mono font-bold text-[#0066FF]">
-              <Lock className="w-3 h-3" /> TLS 1.3 SECURE
-            </div>
-          </div>
-
           {/* BRAND HEADLINE */}
-          <div className="text-center space-y-2">
+          <div className="text-center space-y-2 pt-2">
             <div className="flex justify-center">
               <img src="/logo.png" alt="Retro Lab" className="h-16 w-auto object-contain" />
             </div>
@@ -183,7 +165,7 @@ function LoginContent() {
           </div>
 
           {/* SINGLE GOOGLE SIGN IN BUTTON */}
-          <div className="space-y-4 pt-2">
+          <div className="pt-2">
             <button
               onClick={() => handleGoogleOAuthInitiate(selectedRole)}
               disabled={loading}
@@ -203,19 +185,11 @@ function LoginContent() {
                 {loading ? 'Connecting to Google...' : `Sign in with Google (${selectedRole === 'ADMIN' ? 'Admin' : 'Member'})`}
               </span>
             </button>
-
-            <div className="p-3.5 bg-blue-50/60 rounded-xl border border-blue-200 text-[11px] font-mono text-blue-700 flex items-center gap-2.5">
-              <Zap className="w-4 h-4 shrink-0 text-[#0066FF]" />
-              <span>Google OAuth verifies institutional credentials and grants instant access.</span>
-            </div>
           </div>
 
-          {/* BOTTOM FOOTER UTILITIES */}
-          <div className="pt-4 border-t border-slate-100 flex items-center justify-between text-xs font-mono text-slate-500">
+          {/* BOTTOM FOOTER */}
+          <div className="pt-4 border-t border-slate-100 text-center text-xs font-mono text-slate-500">
             <span className="text-[10px] text-slate-400">RETRO LAB v2.5 :: DIU</span>
-            <Link href="/contact" className="hover:text-[#0066FF] transition-colors">
-              Request Support →
-            </Link>
           </div>
         </div>
       </div>
