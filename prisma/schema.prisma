@@ -1,0 +1,100 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+enum Role {
+  USER
+  ADMIN
+}
+
+enum BookingStatus {
+  PENDING
+  CONFIRMED
+  CANCELLED
+  COMPLETED
+}
+
+model User {
+  id          String    @id @default(cuid())
+  name        String
+  email       String    @unique
+  avatar      String?
+  phone       String?
+  institution String?
+  department  String?
+  batch       String?
+  role        Role      @default(USER)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  bookings    Booking[]
+}
+
+model Package {
+  id            String    @id @default(cuid())
+  name          String
+  badge         String?
+  durationHours Int
+  priceBDT      Int
+  description   String
+  features      String[]
+  popular       Boolean   @default(false)
+  active        Boolean   @default(true)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  bookings      Booking[]
+}
+
+model TimeSlot {
+  id        String   @id @default(cuid())
+  startTime String
+  endTime   String
+  capacity  Int      @default(10)
+  active    Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model CustomPricingRule {
+  id         String   @id @default(cuid())
+  date       String   @unique
+  multiplier Float    @default(1.0)
+  note       String?
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+}
+
+model Booking {
+  id            String        @id @default(cuid())
+  bookingCode   String        @unique
+  userId        String
+  user          User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  packageId     String
+  package       Package       @relation(fields: [packageId], references: [id])
+  date          String
+  slot          String
+  totalPrice    Int
+  status        BookingStatus @default(PENDING)
+  paymentMethod String        @default("bKash / Nagad / Card")
+  paymentStatus String        @default("Pending")
+  trxId         String?
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+}
+
+model LabSettings {
+  id              String   @id @default("default")
+  labName         String   @default("Retro Lab")
+  contactEmail    String   @default("mail.retrolab@gmail.com")
+  contactPhone    String   @default("+880 1865-326474")
+  location        String   @default("Changaw, Near Civil Department, Daffodil International University")
+  openingHour     String   @default("09:00")
+  closingHour     String   @default("20:00")
+  maxSlotsPerUser Int      @default(3)
+  maintenanceMode Boolean  @default(false)
+  updatedAt       DateTime @updatedAt
+}
