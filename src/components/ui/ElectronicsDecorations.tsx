@@ -217,9 +217,9 @@ export function SchematicMarginDecorations() {
  * Full page ambient overlay scattering electronics components randomly across the background grid,
  * creating an authentic engineering blueprint schematic feel across the full page surface.
  */
-export function FullPageSchematicOverlay() {
+export function FullPageSchematicOverlay({ opacity = 1, className = '' }: { opacity?: number; className?: string }) {
   return (
-    <div className="absolute inset-0 pointer-events-none overflow-hidden select-none z-0">
+    <div className={`absolute inset-0 pointer-events-none overflow-hidden select-none z-0 ${className}`} style={{ opacity }}>
       {/* HIGH DENSITY SCATTERED ELECTRONICS OBJECTS */}
 
       {/* REGION 1: TOP 0% - 25% */}

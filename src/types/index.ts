@@ -15,12 +15,12 @@ export interface User {
 
 export interface TimeSlot {
   id: string;
-  dayOfWeek: number; // 0 = Sun, 1 = Mon, ..., 6 = Sat
+  dayOfWeek?: number; // 0 = Sun, 1 = Mon, ..., 6 = Sat
   startTime: string; // e.g. "10:00 AM" or "10:00"
   endTime: string;   // e.g. "12:00 PM" or "12:00"
   capacity: number;  // default 10
   bookedSeats?: number; // Calculated dynamically
-  isActive: boolean;
+  isActive?: boolean;
 }
 
 export interface Package {
@@ -65,7 +65,8 @@ export interface Booking {
   customerName: string;
   customerPhone: string;
   institution: string;
-  departmentBatch: string;
+  departmentBatch?: string;
+  department?: string;
   createdAt: string;
 }
 
@@ -81,16 +82,25 @@ export interface Facility {
 
 export interface LabSettings {
   labName: string;
-  tagline: string;
-  maxMembers: number;
-  defaultSlotDuration: number;
-  openingTime: string;
-  closingTime: string;
-  advanceBookingDays: number;
-  cancellationPolicy: string;
+  tagline?: string;
+  maxMembers?: number;
+  defaultSlotDuration?: number;
+  openingTime?: string;
+  closingTime?: string;
+  openingHour?: string;
+  closingHour?: string;
+  maxSlotsPerUser?: number;
+  maintenanceMode?: boolean;
+  advanceBookingDays?: number;
+  cancellationPolicy?: string;
   contactEmail: string;
   contactPhone: string;
-  address: string;
+  address?: string;
+  location?: string;
+  institutionTag?: string;
+  maxCapacityPerSlot?: number;
+  operatingHours?: string;
+  systemStatus?: string;
 }
 
 export interface AnalyticsSummary {

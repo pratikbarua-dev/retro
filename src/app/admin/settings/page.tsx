@@ -8,6 +8,8 @@ import { LabSettings } from '@/types';
 export default function AdminSettingsPage() {
   const [settings, setSettings] = useState<LabSettings>({
     labName: 'Retro Lab',
+    contactEmail: 'mail.retrolab@gmail.com',
+    contactPhone: '+880 1865-326474',
     institutionTag: 'Daffodil International University - Smart City',
     operatingHours: '08:00 AM – 10:00 PM',
     maxCapacityPerSlot: 10,

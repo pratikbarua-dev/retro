@@ -164,10 +164,12 @@ function BookingContent() {
     setCustomDuration(dur);
     setSelectedSlot({
       id: `custom_range_${newStart.replace(/[^a-zA-Z0-9]/g, '')}_${newEnd.replace(/[^a-zA-Z0-9]/g, '')}`,
+      dayOfWeek: 0,
       startTime: newStart,
       endTime: newEnd,
       capacity: 10,
       bookedSeats: 0,
+      isActive: true,
     });
   };
 

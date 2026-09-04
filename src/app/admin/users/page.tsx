@@ -90,7 +90,7 @@ export default function AdminUsersPage() {
     (u) =>
       u.name.toLowerCase().includes(search.toLowerCase()) ||
       u.email.toLowerCase().includes(search.toLowerCase()) ||
-      u.institution.toLowerCase().includes(search.toLowerCase())
+      (u.institution || '').toLowerCase().includes(search.toLowerCase())
   );
 
   return (

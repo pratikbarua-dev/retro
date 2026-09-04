@@ -148,7 +148,7 @@ export default function AdminTimeSlotsPage() {
                     <td className="py-4 px-4 text-right">
                       <div className="flex items-center justify-end gap-2">
                         <button
-                          onClick={() => handleToggleActive(slot.id, slot.isActive)}
+                          onClick={() => handleToggleActive(slot.id, slot.isActive ?? true)}
                           className={`px-2.5 py-1 rounded-lg border text-[10px] font-mono transition-colors ${
                             slot.isActive
                               ? 'bg-amber-950 border-amber-800 text-amber-300 hover:bg-amber-900'
