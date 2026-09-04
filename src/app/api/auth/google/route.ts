@@ -8,7 +8,11 @@ export async function GET(req: NextRequest) {
   const role = searchParams.get('role') || 'USER';
 
   const clientId = process.env.GOOGLE_CLIENT_ID;
-  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
+  const host = req.headers.get('x-forwarded-host') || req.headers.get('host') || req.nextUrl.host;
+  const proto = req.headers.get('x-forwarded-proto') || (host.includes('localhost') ? 'http' : 'https');
+  const baseUrl = process.env.NEXT_PUBLIC_APP_URL && !process.env.NEXT_PUBLIC_APP_URL.includes('localhost')
+    ? process.env.NEXT_PUBLIC_APP_URL
+    : `${proto}://${host}`;
   const redirectUri = `${baseUrl}/api/auth/google/callback`;
 
   // Fallback mode if GOOGLE_CLIENT_ID is not configured in local environment
